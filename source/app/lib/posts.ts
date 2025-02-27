@@ -1,59 +1,124 @@
-// lib/posts.ts
+// app/lib/posts.ts
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
-
-const postsDirectory = path.join(process.cwd(), 'content/posts')
+import { execSync } from 'child_process'
 
 export interface PostData {
   slug: string
   title: string
   date: string
   content: string
-  // 他に必要なフィールドがあれば追加
+  group: string
+  tags: string[]
+}
+
+// 記事は contests 以下に置く前提
+const postsDirectory = path.join(process.cwd(), 'contents')
+
+// 再帰的に Markdown ファイルを取得
+function getMarkdownFiles(dir: string): string[] {
+  let files: string[] = []
+  const entries = fs.readdirSync(dir, { withFileTypes: true })
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name)
+    if (entry.isDirectory()) {
+      files = files.concat(getMarkdownFiles(fullPath))
+    } else if (entry.isFile() && entry.name.endsWith('.md')) {
+      files.push(fullPath)
+    }
+  }
+  return files
+}
+
+// 指定ファイルの git 最新コミット日時を ISO 8601 形式で取得
+function getGitCommitDate(filePath: string): string {
+  try {
+    // cwd を postsDirectory に設定して、対象ファイルのパスを相対パスで指定
+    const relativeFilePath = path.relative(postsDirectory, filePath)
+    const stdout = execSync(
+      `git log -1 --format=%aI ${relativeFilePath}`,
+      { cwd: postsDirectory }
+    )
+      .toString()
+      .trim()
+    return stdout.split('T')[0]
+  } catch (error) {
+    console.error(`Error retrieving git commit date for ${filePath}: `, error)
+    return ''
+  }
 }
 
 export async function getAllPosts(): Promise<PostData[]> {
-  const fileNames = fs.readdirSync(postsDirectory)
-  console.log(fileNames)
-  const allPosts = await Promise.all(
-    fileNames.map(async (fileName) => {
-      const slug = fileName.replace(/\.md$/, '')
-      const fullPath = path.join(postsDirectory, fileName)
-      const fileContents = fs.readFileSync(fullPath, 'utf8')
-
+  const filePaths = getMarkdownFiles(postsDirectory)
+  const posts = await Promise.all(
+    filePaths.map(async (filePath) => {
+      const fileContents = fs.readFileSync(filePath, 'utf8')
       const { data, content } = matter(fileContents)
       const processedContent = await remark().use(html).process(content)
       const contentHtml = processedContent.toString()
 
+      // グループは contests/ 以下の最初のディレクトリ名とする
+      const relativePath = path.relative(postsDirectory, filePath)
+      const group = relativePath.split(path.sep)[0]
+      // slug は拡張子除去後、パス区切りをスラッシュに置換
+      const slug = relativePath.replace(/\.md$/, '').replace(new RegExp(`\\${path.sep}`, 'g'), '/')
+
+      // git の最新コミット日時を date に利用
+      const commitDate = getGitCommitDate(filePath)
+
+      // front matter の tags を配列で取得（存在しない場合は空配列）
+      const tags = data.tags
+        ? (Array.isArray(data.tags) ? data.tags : [data.tags])
+        : []
+
       return {
         slug,
         title: data.title,
-        date: data.date,
+        date: commitDate,
         content: contentHtml,
-      }
+        group,
+        tags,
+      } as PostData
     })
   )
-  // 例：日付順にソート
-  return allPosts.sort((a, b) => (a.date < b.date ? 1 : -1))
+  // 日付降順（新しい順）にソート
+  return posts.sort((a, b) => (a.date < b.date ? 1 : -1))
 }
 
 export async function getPostBySlug(slug: string): Promise<PostData | null> {
-  const fullPath = path.join(postsDirectory, `${slug}.md`)
-  if (!fs.existsSync(fullPath)) {
-    return null
-  }
-  const fileContents = fs.readFileSync(fullPath, 'utf8')
-  const { data, content } = matter(fileContents)
-  const processedContent = await remark().use(html).process(content)
-  const contentHtml = processedContent.toString()
-
-  return {
-    slug,
-    title: data.title,
-    date: data.date,
-    content: contentHtml,
-  }
+  const posts = await getAllPosts()
+  const post = posts.find((p) => p.slug === slug)
+  return post ?? null
 }
+
+// 再帰的にディレクトリを巡回して、グループの相対パスを取得する
+export async function getAllGroups(): Promise<string[]> {
+  const groups: string[] = []
+
+  function walk(dir: string, relativePath: string = '') {
+    const entries = fs.readdirSync(dir, { withFileTypes: true })
+    for (const entry of entries) {
+      if (entry.isDirectory() && entry.name !== '.git') {
+        const groupPath = relativePath ? `${relativePath}/${entry.name}` : entry.name
+        groups.push(groupPath)
+        walk(path.join(dir, entry.name), groupPath)
+      }
+    }
+  }
+
+  walk(postsDirectory)
+  return groups
+}
+
+export async function getAllTags(): Promise<string[]> {
+  const posts = await getAllPosts()
+  const tagSet = new Set<string>()
+  posts.forEach(post => {
+    post.tags.forEach(tag => tagSet.add(tag))
+  })
+  return Array.from(tagSet)
+}
+

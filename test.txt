@@ -30,7 +30,7 @@ export default async function HomePage() {
           ))}
         </ul>
         <div className="mt-8 text-center">
-          <Link href="/search" className="inline-block text-blue-600 hover:underline">
+          <Link href="/posts/page/1" className="inline-block text-blue-600 hover:underline">
               すべての記事を見る →
           </Link>
         </div>
