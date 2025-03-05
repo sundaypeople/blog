@@ -31,5 +31,5 @@ jobs:
           git commit -m "delete source/contents"
           git checkout -b prd
           git merge main
-          git push
+          git push --set-upstream origin prd
   
