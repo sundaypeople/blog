@@ -1,40 +1,50 @@
-// app/page.tsx
-import Link from 'next/link'
-import { getAllPosts, PostData } from '@/app/lib/posts'
+// pages/index.js or similar (Next.jsページコンポーネント)
+import Link from 'next/link'  // 必要に応じてNext.jsのLinkをインポート
+import { getAllPosts } from './lib/posts';
 
 export default async function HomePage() {
-  const posts: PostData[] = await getAllPosts()
-  const latestPosts = posts.slice(0, 5) // 最新記事5件を表示
-
+  const posts = (await getAllPosts()).slice(0, 2)
+  
   return (
-    <main className="container mx-auto px-4 py-8">
-      {/* ヒーローセクション */}
-      <section className="mb-12 text-center">
-        <h1 className="text-4xl font-bold mb-4">Tech Blog</h1>
-        <p className="text-lg text-gray-600">
-          最新の技術情報と知見をお届けします。記事を通じて日々の学びを共有していきます。
+    <main>
+      {/* Hero Section */}
+      <section className="py-16 px-6 text-center mt-28">  
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          モダン技術ブログへようこそ
+        </h1>
+        <p className="text-xl text-gray-700 max-w-2xl mx-auto">
+          最新のフロントエンド技術や開発ノウハウをお届けするブログです。
         </p>
+        <Link href="/posts" className="mt-8 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded">
+            記事を読む
+        </Link>
       </section>
 
-      {/* 最新記事一覧 */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-6">最新記事</h2>
-        <ul className="space-y-6">
-          {latestPosts.map((post) => (
-            <li key={post.slug} className="border-b pb-4">
-              <Link href={`/posts/${post.slug}`} className="text-xl text-blue-600 hover:underline">
+      {/* Article List Section */}
+      <section className="container mx-auto px-6 py-12">
+        <h2 className="text-2xl font-bold mb-6">最新記事</h2>
+        <ul className="divide-y divide-gray-200">
+          {posts.map(post => (
+            <li key={post.slug} className="py-6 flex flex-col">  
+              {/* 記事タイトル */}
+              <Link href={`/posts/${post.slug}`} className="text-xl font-semibold text-gray-900 hover:underline">
                   {post.title}
               </Link>
-              <p className="text-gray-500">{post.date}</p>
+              {/* 概要 */}
+              <p className="text-gray-700 text-sm mt-2">
+                {post.date} | {post.group} | {post.tags.join(', ')}
+              </p>
+              <p className="text-gray-700 text-sm mt-2">
+                {post.content.substring(0, 100).replace(/<[^>]+>/g, '')}...
+              </p>
+              {/* 日付などのメタ情報 */}
+              <span className="text-gray-500 text-xs mt-2">
+                公開日: {post.date}
+              </span>
             </li>
           ))}
         </ul>
-        <div className="mt-8 text-center">
-          <Link href="/search" className="inline-block text-blue-600 hover:underline">
-              すべての記事を見る →
-          </Link>
-        </div>
       </section>
     </main>
-  )
+  );
 }
