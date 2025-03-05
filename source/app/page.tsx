@@ -1,6 +1,6 @@
 // pages/index.js or similar (Next.jsページコンポーネント)
 import Link from 'next/link'  // 必要に応じてNext.jsのLinkをインポート
-import { getAllPosts } from './lib/posts';
+import { getAllPosts } from '@/app/lib/posts';
 
 export default async function HomePage() {
   const posts = (await getAllPosts()).slice(0, 2)
@@ -10,12 +10,12 @@ export default async function HomePage() {
       {/* Hero Section */}
       <section className="py-16 px-6 text-center mt-28">  
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          モダン技術ブログへようこそ
+          学習記録ブログ
         </h1>
         <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-          最新のフロントエンド技術や開発ノウハウをお届けするブログです。
+          最新のインフラ技術や開発ノウハウをお届けしたいブログです。
         </p>
-        <Link href="/posts" className="mt-8 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded">
+        <Link href="/search" className="mt-8 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded">
             記事を読む
         </Link>
       </section>
