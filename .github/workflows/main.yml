@@ -29,6 +29,7 @@ jobs:
           git rm -r source/contents
           git add .
           git commit -m "delete source/contents"
+          git pull origin prd
           git checkout -b prd
           git merge main
           git push --set-upstream origin prd
