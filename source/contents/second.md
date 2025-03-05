@@ -1,6 +1,6 @@
 ---
-title:
-tag:["linux","second"]
+title: Second
+tags: ["linux","second"]
 ---
 
 # Second

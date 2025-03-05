@@ -1,6 +1,6 @@
 ---
-title:
-tag:["linux","first"]
+title: first
+tags: ["linux","first"]
 ---
 
 # first
