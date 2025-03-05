@@ -1,0 +1,32 @@
+name: marge prd
+
+on: 
+  push:
+    branches:
+      - main
+      
+env:
+  TARGET_REPO: blog
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+      - name:  push tag
+        uses: anothrNick/github-tag-action@v1 # Don't use @master or @v1 unless you're happy to test the latest version
+        env:
+          WITH_V: true
+      - name: git merge
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "Github Actions"
+          git push
+          git rm -r source/contents
+          git add .
+          git commit -m "delete source/contents"
+          git checkout -b prd
+          git merge main
+          git push
+  
