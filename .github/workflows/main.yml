@@ -30,4 +30,4 @@ jobs:
           git merge main --no-commit --no-ff
           git checkout HEAD -- source/contents
           git commit -m "Merge main"
-          git push --set-upstream origin prd
+          git push
