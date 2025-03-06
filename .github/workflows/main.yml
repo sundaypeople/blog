@@ -7,20 +7,25 @@ on:
       
 env:
   TARGET_REPO: blog
+
 jobs:
   release:
     runs-on: ubuntu-latest
     steps: 
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: '0'
-
       - id: create
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           repositories: ${{ env.TARGET_REPO }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner}}/${{ env.TARGET_REPO }}  
+          path: ${{ env.TARGET_REPO }}
+          token: ${{ steps.create.outputs.token }} 
+          ref: prd
+          fetch-depth: '0'
 
       - name:  push tag
         id: version
@@ -30,8 +35,6 @@ jobs:
           WITH_V: true
 
       - name: git merge
-        env:
-          GITHUB_APP_TOKEN: ${{ steps.create.outputs.token }}
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "Github Actions"
@@ -39,4 +42,11 @@ jobs:
           git merge main --no-commit --no-ff
           git checkout HEAD -- source/contents
           git commit -m "Merge main"
-          git push --set-upstream https://x-access-token:${GITHUB_APP_TOKEN}@github.com:LainInTheWired/blog.git prd
+
+      - name: Push changes to target repository
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ steps.create.outputs.token }} 
+          repository: laininthewired/${{ env.TARGET_REPO }} 
+          branch: prd
+          directory: ${{ env.TARGET_REPO }} 
