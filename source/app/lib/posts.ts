@@ -4,6 +4,8 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
+import remarkGfm from 'remark-gfm'
+
 import { execSync } from 'child_process'
 
 export interface PostData {
@@ -16,8 +18,16 @@ export interface PostData {
 }
 
 // 記事は contests 以下に置く前提
-const postsDirectory = path.join(process.cwd(), 'contents')
+const env = process.env.NEXT_PUBLIC_ENV
 
+let dir = ""
+if(env == "dev") {
+   dir = path.join(process.cwd(), 'test-contents')
+}else {
+   dir = path.join(process.cwd(), 'contents')
+}
+console.log(dir)
+const postsDirectory = dir
 // 再帰的に Markdown ファイルを取得
 function getMarkdownFiles(dir: string): string[] {
   let files: string[] = []
@@ -57,7 +67,11 @@ export async function getAllPosts(): Promise<PostData[]> {
     filePaths.map(async (filePath) => {
       const fileContents = fs.readFileSync(filePath, 'utf8')
       const { data, content } = matter(fileContents)
-      const processedContent = await remark().use(html).process(content)
+      const processedContent = await  remark()
+                                .use(remarkGfm) // GitHub Flavored Markdown を有効化
+                                .use(html, { sanitize: false }) // sanitize を無効化して HTML タグを保持
+                                .process(content)
+
       const contentHtml = processedContent.toString()
 
       // グループは contests/ 以下の最初のディレクトリ名とする

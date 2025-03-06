@@ -8,7 +8,6 @@ export default async function PostPage({ params }: MyProps) {
   // slug 配列をスラッシュで結合して文字列にする
   const slug = (await params).slug
   const slugStr = slug.join('/')
-  console.log(slugStr)
   const post = await getPostBySlug(slugStr)
   if (!post) {
     // Next.js の notFound を使うなどして 404 ページを表示できます
@@ -17,7 +16,7 @@ export default async function PostPage({ params }: MyProps) {
 
   return (
     <>
-      <article className="prose lg:prose-xl mx-auto py-8">
+        <article className="prose mx-auto py-8 text-base leading-relaxed">
         <div className='mb-16'>
           <h1>{post.title}</h1>
           <p className='-mt-8'>{post.date}</p>
