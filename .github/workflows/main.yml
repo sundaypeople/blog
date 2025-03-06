@@ -41,7 +41,7 @@ jobs:
           git config --global user.name "Github Actions"
           git checkout prd
           git merge main --no-commit --no-ff
-          git checkout HEAD -- source/contents
+          git reset --hard HEAD -- source/contents          
           git commit -m "Merge main"
 
       - name: Push changes to target repository
