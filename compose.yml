@@ -7,7 +7,8 @@ services:
     volumes:
       - ./source:/app
     environment:
-      - WATCHPACK_POLLING=true
+      WATCHPACK_POLLING: true
+      NEXT_PUBLIC_ENV: "dev"
     # command: sh -c "[ -f ~/.exec-once ] || { yarn install && touch ~/.exec-once; } && yarn build && yarn start"
     command: sh -c "[ -f ~/.exec-once ] || { yarn install && touch ~/.exec-once; } && yarn dev"
     ports:

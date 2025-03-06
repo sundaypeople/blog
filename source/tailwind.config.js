@@ -7,8 +7,19 @@ module.exports = {
  
     // Or if using `src` directory:
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
-  ],  theme: {
-    extend: {},
+  ],  
+  theme: {
+    extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            fontSize: '1rem', // フォントサイズを変更
+            lineHeight: '10', // 行間を変更
+            // 他にも調整したいスタイルをここで指定
+          },
+        },
+      },
+    },
   },
   plugins: [
         require('@tailwindcss/typography'),

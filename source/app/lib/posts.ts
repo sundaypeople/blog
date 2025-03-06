@@ -18,8 +18,16 @@ export interface PostData {
 }
 
 // 記事は contests 以下に置く前提
-const postsDirectory = path.join(process.cwd(), 'contents')
+const env = process.env.NEXT_PUBLIC_ENV
 
+let dir = ""
+if(env == "dev") {
+   dir = path.join(process.cwd(), 'test-contents')
+}else {
+   dir = path.join(process.cwd(), 'contents')
+}
+console.log(dir)
+const postsDirectory = dir
 // 再帰的に Markdown ファイルを取得
 function getMarkdownFiles(dir: string): string[] {
   let files: string[] = []
@@ -63,7 +71,7 @@ export async function getAllPosts(): Promise<PostData[]> {
                                 .use(remarkGfm) // GitHub Flavored Markdown を有効化
                                 .use(html, { sanitize: false }) // sanitize を無効化して HTML タグを保持
                                 .process(content)
-                                
+
       const contentHtml = processedContent.toString()
 
       // グループは contests/ 以下の最初のディレクトリ名とする
