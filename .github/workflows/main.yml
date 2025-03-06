@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'source/contents'
+  
       
 env:
   TARGET_REPO: blog
@@ -21,6 +24,8 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
+          repository: ${{ github.repository_owner}}/${{ env.TARGET_REPO }}  
+          token: ${{ steps.create.outputs.token }} 
           fetch-depth: '0'
 
       - name:  push tag
