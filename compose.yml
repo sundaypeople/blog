@@ -9,6 +9,6 @@ services:
     environment:
       - WATCHPACK_POLLING=true
     # command: sh -c "[ -f ~/.exec-once ] || { yarn install && touch ~/.exec-once; } && yarn build && yarn start"
-    # command: sh -c "[ -f ~/.exec-once ] || { yarn install && touch ~/.exec-once; } && yarn dev"
+    command: sh -c "[ -f ~/.exec-once ] || { yarn install && touch ~/.exec-once; } && yarn dev"
     ports:
       - "3000:3000"

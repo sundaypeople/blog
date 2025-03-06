@@ -4,6 +4,8 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
+import remarkGfm from 'remark-gfm'
+
 import { execSync } from 'child_process'
 
 export interface PostData {
@@ -57,7 +59,11 @@ export async function getAllPosts(): Promise<PostData[]> {
     filePaths.map(async (filePath) => {
       const fileContents = fs.readFileSync(filePath, 'utf8')
       const { data, content } = matter(fileContents)
-      const processedContent = await remark().use(html).process(content)
+      const processedContent = await  remark()
+                                .use(remarkGfm) // GitHub Flavored Markdown を有効化
+                                .use(html, { sanitize: false }) // sanitize を無効化して HTML タグを保持
+                                .process(content)
+                                
       const contentHtml = processedContent.toString()
 
       // グループは contests/ 以下の最初のディレクトリ名とする
