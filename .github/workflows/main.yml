@@ -26,11 +26,9 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "Github Actions"
-          git rm -r source/contents
-          git add .
-          git commit -m "delete source/contents"
           git pull origin prd
           git checkout -b prd
-          git merge main
+          git merge main --no-commit --no-ff
+          git checkout HEAD -- source/contents
+          git commit -m "Merge main"
           git push --set-upstream origin prd
-  
