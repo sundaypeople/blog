@@ -45,4 +45,3 @@ jobs:
           github_token: ${{ steps.create.outputs.token }} 
           repository: laininthewired/${{ env.TARGET_REPO }} 
           branch: prd
-          directory: ${{ env.TARGET_REPO }} 
