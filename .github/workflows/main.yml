@@ -7,10 +7,18 @@ on:
       
 env:
   TARGET_REPO: blog
+
 jobs:
   release:
     runs-on: ubuntu-latest
     steps: 
+      - id: create
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          repositories: ${{ env.TARGET_REPO }}
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
@@ -30,4 +38,10 @@ jobs:
           git merge main --no-commit --no-ff
           git checkout HEAD -- source/contents
           git commit -m "Merge main"
-          git push
+
+      - name: Push changes to target repository
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ steps.create.outputs.token }} 
+          repository: laininthewired/${{ env.TARGET_REPO }} 
+          branch: prd
