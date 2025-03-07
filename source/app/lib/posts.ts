@@ -8,10 +8,6 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import {unified} from 'unified'
 import remarkExpressiveCode from 'rehype-expressive-code'
-
-
-import rehypeAddCopyButton from './rehype-clustom-plugin' // 下記で作成するカスタムプラグイン
-
 import { execSync } from 'child_process'
 
 export interface PostData {
