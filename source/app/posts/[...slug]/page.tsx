@@ -18,9 +18,9 @@ export default async function PostPage({ params }: MyProps) {
   return (
     <>
         <article className="prose mx-auto py-8  leading-snug">
-        <div className='mb-16'>
+        <div className='mb-2 -mt-16'>
           <h1>{post.title}</h1>
-          <p className='-mt-8'>{post.date}</p>
+          <p className=''>{post.date}</p>
         </div>
         <div dangerouslySetInnerHTML={{ __html: post.content }} />
       </article>
