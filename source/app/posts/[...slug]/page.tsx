@@ -1,4 +1,5 @@
 // app/posts/[...slug]/page.tsx
+
 import { getPostBySlug,getAllPosts } from '@/app/lib/posts'
 interface MyProps {
   params: Promise<{ slug: string[] }>
@@ -16,12 +17,11 @@ export default async function PostPage({ params }: MyProps) {
 
   return (
     <>
-        <article className="prose mx-auto py-8 text-base leading-relaxed">
+        <article className="prose mx-auto py-8  leading-snug">
         <div className='mb-16'>
           <h1>{post.title}</h1>
           <p className='-mt-8'>{post.date}</p>
         </div>
-
         <div dangerouslySetInnerHTML={{ __html: post.content }} />
       </article>
     </>
