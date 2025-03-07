@@ -2,9 +2,15 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
-import { remark } from 'remark'
-import html from 'remark-html'
-import remarkGfm from 'remark-gfm'
+import rehypeSanitize from 'rehype-sanitize'
+import rehypeStringify from 'rehype-stringify'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
+import {unified} from 'unified'
+import remarkExpressiveCode from 'rehype-expressive-code'
+
+
+import rehypeAddCopyButton from './rehype-clustom-plugin' // 下記で作成するカスタムプラグイン
 
 import { execSync } from 'child_process'
 
@@ -67,10 +73,13 @@ export async function getAllPosts(): Promise<PostData[]> {
     filePaths.map(async (filePath) => {
       const fileContents = fs.readFileSync(filePath, 'utf8')
       const { data, content } = matter(fileContents)
-      const processedContent = await  remark()
-                                .use(remarkGfm) // GitHub Flavored Markdown を有効化
-                                .use(html, { sanitize: false }) // sanitize を無効化して HTML タグを保持
-                                .process(content)
+      const processedContent = await  unified()
+      .use(remarkParse)
+      .use(remarkRehype)
+      .use(rehypeSanitize)
+      .use(rehypeStringify)
+      .use(remarkExpressiveCode,{ themes: ["material-theme"]})
+      .process(content)
 
       const contentHtml = processedContent.toString()
 

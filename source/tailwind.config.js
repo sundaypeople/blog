@@ -14,7 +14,7 @@ module.exports = {
         DEFAULT: {
           css: {
             fontSize: '1rem', // フォントサイズを変更
-            lineHeight: '10', // 行間を変更
+            lineHeight: '1', // 行間を変更
             // 他にも調整したいスタイルをここで指定
           },
         },
