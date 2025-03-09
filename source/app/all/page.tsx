@@ -6,5 +6,7 @@ export default async function PostsSearchPage() {
     const posts = await getAllPosts()
     const groups = await getAllGroups()
     const tags = await getAllTags()
+    console.log(posts)
+
     return <PostsList posts={posts} groups={groups} tags={tags} />
 }

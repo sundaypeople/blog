@@ -15,7 +15,7 @@ export default async function HomePage() {
         <p className="text-xl text-gray-700 max-w-2xl mx-auto">
           最新のインフラ技術や開発ノウハウをお届けしたいブログです。
         </p>
-        <Link href="/search" className="mt-8 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded">
+        <Link href="/all" className="mt-8 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded">
             記事を読む
         </Link>
       </section>

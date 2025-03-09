@@ -4,6 +4,8 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { PostData } from '@/app/lib/posts'
+import { useRouter } from 'next/navigation';
+
 
 interface PostsListProps {
   posts: PostData[]
@@ -12,10 +14,24 @@ interface PostsListProps {
 }
 
 export default function PostsList({ posts, groups, tags }: PostsListProps) {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [groupFilter, setGroupFilter] = useState<string>('all')
   const [tagFilter, setTagFilter] = useState<string>('all')
+  const [viewMode, setViewMode] = useState<'articles' | 'categories'>('articles')
+
+
+  const handleViewModeChange = (mode: 'articles' | 'categories') => {
+    setViewMode(mode);
+    // 「articles」が /posts、「categories」が /all に遷移する例
+    if (mode === 'articles') {
+      router.push('/all');
+    } else {
+      router.push('/posts');
+    }
+  };
+
 
   const filteredPosts = useMemo(() => {
     let filtered = posts
@@ -43,6 +59,28 @@ export default function PostsList({ posts, groups, tags }: PostsListProps) {
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-6">記事一覧</h1>
+      <div className="flex space-x-4 mb-4 md:mb-2">
+        <button
+          onClick={() => handleViewModeChange('articles')}
+          className={`px-4 py-2 border ${
+            viewMode === 'articles'
+              ? 'bg-blue-600 text-white'
+              : 'bg-white text-blue-600'
+          }`}
+        >
+          記事一覧
+        </button>
+        <button
+          onClick={() => handleViewModeChange('categories')}
+          className={`px-4 py-2 border ${
+            viewMode === 'categories'
+              ? 'bg-blue-600 text-white'
+              : 'bg-white text-blue-600'
+          }`}
+        >
+          カテゴリー
+        </button>
+      </div>
       <div className="flex flex-wrap gap-4 mb-6">
         <input
           type="text"
