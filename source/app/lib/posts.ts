@@ -81,6 +81,9 @@ function getGitCommitDate(filePath: string): string {
 async function  getPostData(filePath:string): Promise<PostData>{
   const fileContents = fs.readFileSync(filePath, 'utf8')
   const { data, content } = matter(fileContents)
+  if (!data.title) {
+    data.title = "---no title---"
+  }
   const processedContent = await unified()
     .use(remarkParse)
     .use(remarkRehype)
