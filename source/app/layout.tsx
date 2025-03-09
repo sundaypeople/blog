@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Header />
-        <div className="px-4">
+        <div className="px-4 max-w-screen-xl mx-auto">
           {children}
         </div>
       </body>

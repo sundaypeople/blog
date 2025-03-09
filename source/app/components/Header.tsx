@@ -12,7 +12,7 @@ const Header = () => {
         </Link>
         {/* ナビゲーションメニュー */}
         <nav className="flex space-x-6 text-lg">
-          <Link href="/search" className="px-3 py-2 hover:bg-gray-100 hover:text-blue-600 rounded transition-colors">
+          <Link href="/all" className="px-3 py-2 hover:bg-gray-100 hover:text-blue-600 rounded transition-colors">
             記事一覧
           </Link>
           {/* <Link href="/pricing" className="px-3 py-2 hover:bg-gray-100 hover:text-blue-600 rounded transition-colors">
