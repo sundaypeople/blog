@@ -42,7 +42,7 @@ export default function PostsFilter({ posts, groups, tags }: PostsFilterProps) {
     return filtered
   }, [posts, searchTerm, sortOrder, groupFilter, tagFilter])
 
-  // グループ一覧用フィルター：グループ名に対して検索とソート（昇順・降順）
+  // カテゴリー一覧用フィルター：カテゴリー名に対して検索とソート（昇順・降順）
   const filteredGroups = useMemo(() => {
     let fg = groups.filter(g => g.toLowerCase().includes(searchTerm.toLowerCase()))
     fg = fg.sort((a, b) =>
@@ -74,7 +74,7 @@ export default function PostsFilter({ posts, groups, tags }: PostsFilterProps) {
                 : 'bg-white text-blue-600'
             }`}
           >
-            グループ一覧
+            カテゴリー一覧
           </button>
         </div>
         {viewMode === 'articles' ? (
@@ -91,7 +91,7 @@ export default function PostsFilter({ posts, groups, tags }: PostsFilterProps) {
               onChange={(e) => setGroupFilter(e.target.value)}
               className="border px-3 py-2"
             >
-              <option value="all">全てのグループ</option>
+              <option value="all">全てのカテゴリー</option>
               {groups.map(group => {
                 const depth = group.split('/').length - 1
                 // 最下層の名前だけを表示し、深さに応じてインデントを付与
@@ -125,11 +125,11 @@ export default function PostsFilter({ posts, groups, tags }: PostsFilterProps) {
             </select>
           </div>
         ) : (
-          // グループ一覧用の検索・ソートUI
+          // カテゴリー一覧用の検索・ソートUI
           <div className="flex flex-wrap gap-4">
             <input
               type="text"
-              placeholder="グループ検索..."
+              placeholder="カテゴリー検索..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="border px-3 py-2"
@@ -181,11 +181,11 @@ export default function PostsFilter({ posts, groups, tags }: PostsFilterProps) {
                 href={`/group/${group}`}
                 className="text-blue-600 hover:underline"
               >
-                このグループの記事を見る →
+                このカテゴリーの記事を見る →
               </Link>
             </div>
           ))}
-          {filteredGroups.length === 0 && <p>該当するグループが見つかりません。</p>}
+          {filteredGroups.length === 0 && <p>該当するカテゴリーが見つかりません。</p>}
         </div>
       )}
     </div>

@@ -94,7 +94,7 @@ export default function PostsList({ posts, groups, tags }: PostsListProps) {
           onChange={(e) => setGroupFilter(e.target.value)}
           className="border px-3 py-2"
         >
-          <option value="all">全てのグループ</option>
+          <option value="all">全てのカテゴリー</option>
           {groups.map(group => {
             const depth = group.split('/').length - 1
             const displayName = `${'　'.repeat(depth)}${group.split('/').pop()}`

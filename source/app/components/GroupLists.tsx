@@ -26,7 +26,7 @@ export default function GroupsList({ groups, posts }: GroupsListProps) {
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-6">グループ一覧</h1>
+      <h1 className="text-3xl font-bold mb-6">カテゴリー一覧</h1>
       <div className="flex flex-wrap gap-4 mb-6">
         <input
           type="text"
@@ -46,10 +46,10 @@ export default function GroupsList({ groups, posts }: GroupsListProps) {
       </div>
       <div className="space-y-6">
         {filteredGroups.map(group => {
-          // 同じグループ階層の場合、グループ名にインデントを付与
+          // 同じカテゴリー階層の場合、カテゴリー名にインデントを付与
           const depth = group.split('/').length - 1
           const displayName = `${'　'.repeat(depth)}${group.split('/').pop()}`
-          // このグループに属する記事数を算出
+          // このカテゴリーに属する記事数を算出
           const count = posts.filter(post => post.group.startsWith(group)).length
           return (
             <article key={group} className="border-b pb-4">
@@ -64,7 +64,7 @@ export default function GroupsList({ groups, posts }: GroupsListProps) {
             </article>
           )
         })}
-        {filteredGroups.length === 0 && <p>該当するグループが見つかりません。</p>}
+        {filteredGroups.length === 0 && <p>該当するカテゴリーが見つかりません。</p>}
       </div>
     </div>
   )

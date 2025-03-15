@@ -81,7 +81,7 @@ export function getDirectoryTree(dir: string = baseDirectory, relativePath: stri
       node.children.push(articleNode)
     }
   }
-  // ソート：ディレクトリを先、次に記事。各グループ内は名前順に並べる
+  // ソート：ディレクトリを先、次に記事。各カテゴリー内は名前順に並べる
   node.children.sort((a, b) => {
     if (a.type === b.type) {
       return a.name.localeCompare(b.name)
