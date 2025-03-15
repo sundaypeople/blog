@@ -94,7 +94,7 @@ async function  getPostData(filePath:string): Promise<PostData>{
 
   const contentHtml = processedContent.toString()
 
-  // グループは posts/ 以下の最初のディレクトリ名とする
+  // カテゴリーは posts/ 以下の最初のディレクトリ名とする
   const relativePath = path.relative(postsDirectory, filePath)
   const group = relativePath.split(path.sep)[0]
   // slug は拡張子除去後、パス区切りをスラッシュに置換
@@ -148,7 +148,7 @@ export async function getPostBySlug(slug: string): Promise<PostData | null> {
   return post ?? null
 }
 
-// 再帰的にディレクトリを巡回して、グループの相対パスを取得する
+// 再帰的にディレクトリを巡回して、カテゴリーの相対パスを取得する
 export async function getAllGroups(): Promise<string[]> {
   const groups: string[] = []
 
